@@ -1,7 +1,8 @@
 const express = require('express');
 const morgan = require('morgan');
 const mongoose =  require('mongoose');
-
+const Blog = require('./models/blog');
+const { result } = require('lodash');
 const app = express();
 
 const dbURI = 'mongodb+srv://iymzjeremie:iymz@nodejs.zfhqw.mongodb.net/Blogs?retryWrites=true&w=majority&appName=nodeJs';
@@ -10,24 +11,31 @@ mongoose.connect(dbURI)
  .catch((err) => console.error('connection error:',err));
 
 app.set('view engine', 'ejs');
-app.use(morgan('dev'))
+app.use(morgan('dev'));
+app.use(express.static('public'));
 app.set('views', './views');
 
+
+
 //middleware static filee
-app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-    const blogs=[
-        {title: 'yoshi finds eggs', snippet: 'Lorem ipsum dolor sit amet consectetur'},
-        {title: 'Mario finds starts', snippet: 'Lorem ipsum dolor sit amet consectetur'},
-        {title: 'How to defeat bowser', snippet: 'Lorem ipsum dolor sit amet consectetur'},
-    ];
-    res.render('index', {title: 'Home', blogs});
+    res.redirect('/blogs');
 });
 
 
 app.get('/about', (req, res) => {
     res.render('about', {title: 'About'});  
+});
+
+app.get('/blogs', (req, res) =>{
+    Blog.find().sort({ createdAt: -1 })
+    .then((result) =>{
+        res.render('index', {title: 'All Blogs', blogs: result})
+    })
+    .catch((err) => {
+        console.log(err);
+    });
 })
 
 app.get('/blogs/create', (req, res) => {
