@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const mongoose =  require('mongoose');
 const Blog = require('./models/blog');
 const { result } = require('lodash');
+const { render } = require('ejs');
 const app = express();
 
 const dbURI = 'mongodb+srv://iymzjeremie:iymz@nodejs.zfhqw.mongodb.net/Blogs?retryWrites=true&w=majority&appName=nodeJs';
@@ -13,6 +14,7 @@ mongoose.connect(dbURI)
 app.set('view engine', 'ejs');
 app.use(morgan('dev'));
 app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true}));
 app.set('views', './views');
 
 
@@ -36,6 +38,31 @@ app.get('/blogs', (req, res) =>{
     .catch((err) => {
         console.log(err);
     });
+});
+
+app.post('/blogs', (req, res) =>{
+    const blog = new Blog(req.body);
+    blog.save()
+    .then((result) =>{
+        res.redirect('/blogs');
+    })
+    .catch((err) =>{
+        console.log(err);
+    })
+})
+
+app.get('/blogs/:id', (req, res) =>{
+    const id = req.params.id;
+    Blog.findById(id)
+    .then(result => {
+        res.render('details',{
+            blog: result,
+            title: result.title
+        });
+   })
+    .catch(err =>{
+        console.log(err);
+    })
 })
 
 app.get('/blogs/create', (req, res) => {

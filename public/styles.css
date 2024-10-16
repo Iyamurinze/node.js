@@ -51,6 +51,15 @@ h3{
 .content{
     margin-left: 20px;
 }
+.blogs .single{
+    display: block;
+    margin: 40px 0;
+    padding-left: 30px;
+    border-left: 8px solid crimson;
+}
+.blogs .single:hover h3{
+    color: crimson;
+}
 .create-blog form{
     max-width: 400px;
     margin: 0 auto;
