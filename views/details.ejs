@@ -8,8 +8,34 @@
             <div class="content">
                 <p><%= blog.body %></p>
             </div>
-            <!-- <a class="delete" data-doc="<%= blog._id %>">delete</a> -->
+            <a class="delete" data-doc="<%= blog._id %>">delete</a>
         </div>
         <%- include("./partials/footer.ejs") %>
+
+        <script>
+            const trashcan = document.querySelector('a.delete');
+            trashcan.addEventListener('click', (e) =>{
+                e.preventDefault(); 
+                
+                const blogId = trashcan.dataset.doc;
+                
+                const endpoint = `/blogs/${blogId}`;
+
+                
+                fetch(endpoint, {
+                    method: 'DELETE'
+                })
+                .then((response) => {
+                    if (response.ok) {
+                        
+                        window.location.href = '/blogs';
+                    } else {
+                        console.error('Failed to delete blog');
+                    }
+                })
+                .catch(err => console.log(err));
+            })
+        </script>
+
     </body>
 </html>
