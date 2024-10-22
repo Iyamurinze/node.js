@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const app = express();
 const blogsRouter = require('./routes/blogsRoutes');
+const methodOverride = require('method-override');
 
 // MongoDB connection
 const dbURI = 'mongodb+srv://iymzjeremie:iymz@nodejs.zfhqw.mongodb.net/Blogs?retryWrites=true&w=majority&appName=nodeJs';
@@ -17,6 +18,7 @@ app.use(morgan('dev'));
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.set('views', './views');
+app.use(methodOverride('_method'));
 
 // Redirect root route to blogs
 app.get('/', (req, res) => {

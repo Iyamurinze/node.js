@@ -46,7 +46,43 @@ router.get('/:id', (req, res) => {
             });
         })
         .catch((err) => {
-            res.status(404).render('404', { title: 'Blog not found'});
+            res.status(404).render('404', { title: 'Blog not found' });
+        });
+});
+
+// Route to render edit form
+router.get('/:id/edit', (req, res) => {
+    const id = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).send('Invalid Blog ID');
+    }
+
+    Blog.findById(id)
+        .then((result) => {
+            res.render('edit', { 
+                title: 'Edit Blog', 
+                blog: result 
+            });
+        })
+        .catch((err) => {
+            res.status(404).render('404', { title: 'Blog not found' });
+        });
+});
+
+// Update blog using PUT request
+router.put('/:id', (req, res) => {
+    const id = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).send('Invalid Blog ID');
+    }
+
+    Blog.findByIdAndUpdate(id, req.body, { new: true, runValidators: true })
+        .then((result) => {
+            res.redirect(`/blogs/${id}`);
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send('Failed to update blog');
         });
 });
 

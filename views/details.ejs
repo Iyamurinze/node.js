@@ -7,8 +7,10 @@
             <h2><%= blog.title %></h2>
             <div class="content">
                 <p><%= blog.body %></p>
-            </div>
+            </div><div class="edits-button">
             <a class="delete" data-doc="<%= blog._id %>">delete</a>
+            <a class="edit" href="/blogs/<%= blog._id %>/edit">edit</a>
+            </div>
         </div>
         <%- include("./partials/footer.ejs") %>
 
